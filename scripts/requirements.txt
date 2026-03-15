@@ -1,16 +1,11 @@
 # Python dependencies for weekly-newsletter scripts
 # Install with: pip install -r scripts/requirements.txt
 
-# No external dependencies required!
-# All scripts use Python standard library only:
-# - urllib (HTTP requests for Hashnode API)
-# - json (JSON parsing)
-# - html.parser (HTML validation)
-# - argparse (CLI argument parsing)
-# - re (regex for validation)
-# - os, sys (file operations)
+# PDF text extraction
+PyPDF2>=3.0
+
+# Word document text extraction
+python-docx>=1.1
 
 # Optional (uncomment if you want enhanced features):
-# pyyaml>=6.0        # Better YAML parsing (currently using simple regex parser)
-# requests>=2.31     # Better HTTP client (currently using urllib)
 # rich>=13.0         # Prettier terminal output

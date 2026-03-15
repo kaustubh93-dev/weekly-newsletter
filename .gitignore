@@ -35,6 +35,12 @@ Desktop.ini
 # Archived legacy newsletters
 archive/
 
+# Raw research materials (PDFs, docs, screenshots)
+research/
+
+# Generated outputs (before they're moved to editions/)
+output/
+
 # Raw research drafts and source images per edition
 editions/*/content.md
 editions/*/assets/

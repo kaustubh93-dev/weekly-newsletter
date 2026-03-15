@@ -52,45 +52,57 @@ Gather your research materials:
 
 ---
 
-### 🗓️ Tuesday/Wednesday — Create Edition & Draft Content
+### 🗓️ Tuesday/Wednesday — Drop Research & Extract Text
 
 **Step 1: Open terminal in your repo folder**
 ```powershell
-cd D:\Personal\Vs-dev-codebase\icici-weekly-newsletter
+cd D:\Personal\Vs-dev-codebase\weekly-newsletter
 ```
 
-**Step 2: Create a new edition folder**
+**Step 2: Create a research folder for your topic**
 ```powershell
-python scripts/new_edition.py --week 2026-W13 --title "Your Topic Title Here"
-```
-This creates:
-```
-editions/2026-W13/
-├── metadata.yml     ← Edit tags & category
-├── content.md       ← Your research goes here
-├── assets/          ← Drop images here
-└── output/          ← AI-generated outputs go here
+mkdir research\mastering-windows-event-logs
 ```
 
-**Step 3: Add your research to `content.md`**
-- Open `editions/2026-W13/content.md` in VS Code
-- Paste your research notes, key points, links, reference text
-- Drop any screenshots/diagrams into `editions/2026-W13/assets/`
+**Step 3: Drop all your research files into it**
+Put everything in `research/mastering-windows-event-logs/`:
+- PDFs from Microsoft Learn
+- Word docs with your notes
+- Screenshots and diagrams
+- A `links.txt` with reference URLs
+- Any `.md` or `.txt` notes
 
-**Step 4: Update `metadata.yml`**
-- Verify title and subtitle
-- Add relevant tags (e.g., `active-directory`, `hyper-v`, `performance`)
-- Set the right category
+**Step 4: Extract all text from your research**
+```powershell
+python scripts/extract_research.py --topic mastering-windows-event-logs
+```
+This reads every PDF, DOCX, TXT, and MD file and produces:
+```
+output/mastering-windows-event-logs/_extracted.md   ← all text consolidated here
+```
+
+> 💡 To see all your research topics: `python scripts/extract_research.py --list`
 
 ---
 
-### 🗓️ Wednesday/Thursday — Generate 3 Outputs with Claude AI
+### 🗓️ Wednesday/Thursday — Generate 3 Outputs with Copilot CLI
 
-You'll use Claude AI 3 times to generate 3 different outputs from your content.
+**Step 1: Open the extracted text**
+```powershell
+code output\mastering-windows-event-logs\_extracted.md
+```
+
+**Step 2: Generate outputs using Copilot CLI**
+
+Open Copilot CLI and provide:
+- The extracted text from `_extracted.md`
+- The formatting prompt from `prompts/`
+
+You'll do this 3 times:
 
 #### Output 1: HTML Email Newsletter
 
-**Open Claude and paste this:**
+Tell Copilot CLI:
 ```
 I have newsletter content that I need formatted as an HTML email.
 
@@ -100,79 +112,73 @@ Here are my formatting instructions:
 Here is my email template:
 [Paste the contents of templates/email-base.html]
 
-Here is my content:
-[Paste the contents of editions/2026-W13/content.md]
-
-Here is my metadata:
-[Paste the contents of editions/2026-W13/metadata.yml]
+Here is my extracted research:
+[Paste the contents of output/mastering-windows-event-logs/_extracted.md]
 
 Please generate the complete HTML email newsletter.
 ```
 
-→ **Save Claude's output as:** `editions/2026-W13/output/newsletter.html`
+→ **Save output as:** `output/mastering-windows-event-logs/newsletter.html`
 
 #### Output 2: Hashnode Blog Post
 
-**Open Claude and paste this:**
+Tell Copilot CLI:
 ```
 I need this content formatted as a Hashnode blog post in Markdown.
 
 Here are my formatting instructions:
 [Paste the contents of prompts/blog-format-prompt.md]
 
-Here is my content:
-[Paste the contents of editions/2026-W13/content.md]
-
-Here is my metadata:
-[Paste the contents of editions/2026-W13/metadata.yml]
+Here is my extracted research:
+[Paste the contents of output/mastering-windows-event-logs/_extracted.md]
 
 Please generate the complete Hashnode blog post with frontmatter.
 ```
 
-→ **Save Claude's output as:** `editions/2026-W13/output/blog-post.md`
+→ **Save output as:** `output/mastering-windows-event-logs/blog-post.md`
 
 #### Output 3: LinkedIn Post
 
-**Open Claude and paste this:**
+Tell Copilot CLI:
 ```
 I need a LinkedIn post promoting this blog article.
 
 Here are my formatting instructions:
 [Paste the contents of prompts/linkedin-format-prompt.md]
 
-Here is my content summary:
-[Paste the key points from content.md or blog-post.md]
+Here is a summary of the content:
+[Paste the key points from _extracted.md or blog-post.md]
 
-My Hashnode blog URL will be: https://kaustubhtech.hashnode.dev/[slug-from-metadata]
+My Hashnode blog URL will be: https://kaustubhtech.hashnode.dev/mastering-windows-event-logs
 
 Please generate the LinkedIn post.
 ```
 
-→ **Save Claude's output as:** `editions/2026-W13/output/linkedin-post.txt`
+→ **Save output as:** `output/mastering-windows-event-logs/linkedin-post.txt`
 
 ---
 
-### 🗓️ Thursday — Review & Preview
+### 🗓️ Thursday — Review & Prepare Edition
 
-**Step 1: Preview the HTML email in your browser**
+**Step 1: Preview outputs**
 ```powershell
-start editions\2026-W13\output\newsletter.html
+# Preview email in browser
+start output\mastering-windows-event-logs\newsletter.html
+
+# Preview blog in VS Code
+code output\mastering-windows-event-logs\blog-post.md
+
+# Check LinkedIn post
+code output\mastering-windows-event-logs\linkedin-post.txt
 ```
-- Check formatting, tables, code blocks
-- Verify all links work
-- Make sure it looks good on a narrow window (simulates mobile)
 
-**Step 2: Preview the blog post**
-- Open `blog-post.md` in VS Code with Markdown preview (Ctrl+Shift+V)
-- Check headings, code blocks, Mermaid diagrams
-- Verify frontmatter is correct
+**Step 2: Prepare the edition for CI/CD**
+```powershell
+python scripts/prepare_edition.py --topic mastering-windows-event-logs --week 2026-W13
+```
+This copies your 3 outputs into `editions/2026-W13/` and creates `metadata.yml`.
 
-**Step 3: Check the LinkedIn post**
-- Open `linkedin-post.txt`
-- Verify it's under 1300 characters
-- Check hashtags are relevant
-
-**Step 4: Run the validator**
+**Step 3: Validate**
 ```powershell
 python scripts/validate_outputs.py --edition editions/2026-W13
 ```
@@ -257,18 +263,22 @@ Now go to GitHub:
 | CI/CD doesn't trigger | Check you merged to `main`, check GitHub Actions tab |
 | Hashnode draft not appearing | Verify secrets are set correctly in GitHub Settings |
 | HTML email looks broken in Outlook | Use "Paste as HTML" or paste from browser preview |
-| `new_edition.py` says folder exists | You already created this week's edition — check `editions/` |
+| `extract_research.py` says "no files found" | Make sure files are in `research/{topic}/`, not a subfolder |
+| PDF extraction gives "(No extractable text)" | PDF might be scanned images — OCR not supported yet |
 
 ---
 
 ## 🗂️ File Cheat Sheet
 
-| What you need | Where to find it |
-|---------------|-----------------|
-| Create new edition | `python scripts/new_edition.py --week YYYY-WNN --title "..."` |
+| What you need | Command / Path |
+|---------------|---------------|
+| Create research folder | `mkdir research\your-topic-name` |
+| Extract research text | `python scripts/extract_research.py --topic your-topic-name` |
+| List all research topics | `python scripts/extract_research.py --list` |
+| Prepare edition for CI/CD | `python scripts/prepare_edition.py --topic your-topic-name --week YYYY-WNN` |
+| Validate edition outputs | `python scripts/validate_outputs.py --edition editions/YYYY-WNN` |
+| Test Hashnode publish | `python scripts/publish_hashnode.py --edition editions/YYYY-WNN --dry-run` |
 | Email formatting prompt | `prompts/email-format-prompt.md` |
 | Blog formatting prompt | `prompts/blog-format-prompt.md` |
 | LinkedIn formatting prompt | `prompts/linkedin-format-prompt.md` |
 | HTML email template | `templates/email-base.html` |
-| Validate outputs | `python scripts/validate_outputs.py --edition editions/YYYY-WNN` |
-| Test Hashnode publish | `python scripts/publish_hashnode.py --edition editions/YYYY-WNN --dry-run` |
