@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{NEWSLETTER_TITLE}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Email client resets */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; }
+
+        /* Base styles */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            color: #343a40;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background-color: #003366;
+            color: #ffffff;
+            padding: 20px 30px;
+            text-align: left;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 16px;
+            font-weight: 400;
+            margin: 5px 0 0 0;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+
+        /* Content */
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .content-section {
+            margin-bottom: 25px;
+        }
+
+        .content-section h2 {
+            font-size: 20px;
+            color: #003366;
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 700;
+        }
+
+        .content-section h3 {
+            font-size: 18px;
+            color: #003366;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        .content-section p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #343a40;
+            margin: 10px 0;
+        }
+
+        .content-section strong {
+            color: #0056b3;
+        }
+
+        .content-section ul, .content-section ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .content-section li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* Analogy / Key Points Box */
+        .analogy, .key-points {
+            background: #e7f3ff;
+            border-left: 4px solid #0056b3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .analogy p {
+            font-style: italic;
+            margin: 0;
+        }
+
+        /* Formula / Highlight Box */
+        .formula {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #003366;
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .data-table td strong {
+            color: #d9534f;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Tip Box */
+        .tip-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .tip-box strong {
+            color: #155724;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .warning-box strong {
+            color: #856404;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .container { margin: 10px; }
+            .header { padding: 15px 20px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{NEWSLETTER_TITLE}}</h1>
+            <p>{{NEWSLETTER_SUBTITLE}} | {{EDITION_DATE}}</p>
+        </div>
+
+        <div class="content">
+            <!-- SECTION: Introduction -->
+            <div class="content-section">
+                <h2>👋 This Week's Focus</h2>
+                <p>{{INTRO_TEXT}}</p>
+            </div>
+
+            <!-- SECTION: Main Content -->
+            <div class="content-section">
+                <h2>{{MAIN_SECTION_TITLE}}</h2>
+                {{MAIN_CONTENT}}
+            </div>
+
+            <!-- SECTION: PowerShell Script of the Week -->
+            <div class="content-section">
+                <h2>💻 PowerShell Script of the Week</h2>
+                <p>{{SCRIPT_DESCRIPTION}}</p>
+                <div class="code-block">{{POWERSHELL_SCRIPT}}</div>
+                <div class="tip-box">
+                    <strong>💡 Pro Tip:</strong> {{PRO_TIP}}
+                </div>
+            </div>
+
+            <!-- SECTION: Key Takeaways -->
+            <div class="content-section">
+                <h2>🎯 Key Takeaways</h2>
+                <ul>
+                    <li>{{TAKEAWAY_1}}</li>
+                    <li>{{TAKEAWAY_2}}</li>
+                    <li>{{TAKEAWAY_3}}</li>
+                </ul>
+            </div>
+
+            <!-- SECTION: Resources -->
+            <div class="content-section">
+                <h2>📚 Useful Resources</h2>
+                <ul>
+                    <li><a href="{{RESOURCE_URL_1}}">{{RESOURCE_TITLE_1}}</a></li>
+                    <li><a href="{{RESOURCE_URL_2}}">{{RESOURCE_TITLE_2}}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Microsoft. All rights reserved.</p>
+            <p>This newsletter is for informational purposes only.</p>
+            <p>Questions? Reach out to your Microsoft support team.</p>
+        </div>
+    </div>
+</body>
+</html>

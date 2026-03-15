@@ -1,0 +1,131 @@
+# Publish Newsletter — runs when edition changes are merged to main
+# Publishes the blog post as a draft to Hashnode and creates a GitHub Release
+
+name: Publish Newsletter
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'editions/**'
+
+jobs:
+  publish:
+    name: Publish to Hashnode & Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit to detect changes
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Detect new/changed editions
+        id: detect
+        run: |
+          # Find edition folders changed in this push
+          CHANGED_EDITIONS=$(git diff --name-only HEAD~1 HEAD | grep '^editions/' | cut -d'/' -f1-2 | sort -u)
+          echo "Changed editions:"
+          echo "$CHANGED_EDITIONS"
+          
+          if [ -z "$CHANGED_EDITIONS" ]; then
+            echo "No edition changes detected"
+            echo "has_editions=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_editions=true" >> $GITHUB_OUTPUT
+            EDITION_LIST=$(echo "$CHANGED_EDITIONS" | tr '\n' ' ')
+            echo "editions=$EDITION_LIST" >> $GITHUB_OUTPUT
+            
+            # Get the first (latest) edition for release tagging
+            LATEST=$(echo "$CHANGED_EDITIONS" | tail -1)
+            echo "latest=$LATEST" >> $GITHUB_OUTPUT
+            WEEK=$(basename "$LATEST")
+            echo "week=$WEEK" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate before publishing
+        if: steps.detect.outputs.has_editions == 'true'
+        run: |
+          for edition in ${{ steps.detect.outputs.editions }}; do
+            echo "Validating $edition..."
+            python scripts/validate_outputs.py --edition "$edition"
+          done
+
+      - name: Publish to Hashnode (Draft)
+        if: steps.detect.outputs.has_editions == 'true'
+        env:
+          HASHNODE_TOKEN: ${{ secrets.HASHNODE_TOKEN }}
+          HASHNODE_PUBLICATION_ID: ${{ secrets.HASHNODE_PUBLICATION_ID }}
+        run: |
+          for edition in ${{ steps.detect.outputs.editions }}; do
+            echo "::group::Publishing $edition to Hashnode"
+            python scripts/publish_hashnode.py --edition "$edition"
+            echo "::endgroup::"
+          done
+
+      - name: Extract edition metadata for release
+        if: steps.detect.outputs.has_editions == 'true'
+        id: metadata
+        run: |
+          EDITION="${{ steps.detect.outputs.latest }}"
+          
+          # Extract title from metadata.yml
+          TITLE=$(grep '^title:' "$EDITION/metadata.yml" | head -1 | sed 's/title:\s*"\?\(.*\)"\?/\1/' | xargs)
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          
+          # Read LinkedIn post for release body
+          LINKEDIN_FILE="$EDITION/output/linkedin-post.txt"
+          if [ -f "$LINKEDIN_FILE" ]; then
+            # Store multiline content
+            {
+              echo 'linkedin<<EOF'
+              cat "$LINKEDIN_FILE"
+              echo 'EOF'
+            } >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        if: steps.detect.outputs.has_editions == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const week = '${{ steps.detect.outputs.week }}';
+            const title = '${{ steps.metadata.outputs.title }}';
+            
+            const body = `## 📰 ${title}
+            
+            **Edition:** ${week}
+            
+            ### 📧 Email Newsletter
+            The HTML email is available in \`editions/${week}/output/newsletter.html\`
+            
+            ### 📝 Hashnode Blog
+            Draft published to Hashnode — review and publish from your dashboard.
+            
+            ### 💼 LinkedIn Post
+            Copy the text from \`editions/${week}/output/linkedin-post.txt\`
+            
+            ---
+            
+            ### Checklist
+            - [ ] Email sent via Outlook
+            - [ ] Hashnode draft reviewed and published
+            - [ ] LinkedIn post shared
+            `;
+            
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `${week}`,
+              name: `${week}: ${title}`,
+              body: body,
+              draft: false,
+              prerelease: false,
+            });
+            
+            console.log(`✅ Release created: ${week}`);

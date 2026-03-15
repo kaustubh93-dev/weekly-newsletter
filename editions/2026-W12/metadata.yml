@@ -1,0 +1,25 @@
+# Edition Metadata
+title: "Mastering Windows Event Logs"
+subtitle: "Weekly Windows Server Digest — Edition #1"
+slug: "mastering-windows-event-logs"
+edition_number: 1
+week: "2026-W12"
+date: "2026-03-15"
+category: "Tips & Tricks"
+series: "Windows Server Weekly"
+tags:
+  - windows-server
+  - powershell
+  - sysadmin
+# Add more tags relevant to this edition's topic:
+#  - active-directory
+#  - hyper-v
+#  - failover-clustering
+#  - performance
+#  - security
+
+# Cover image for Hashnode (optional - use hosted URL)
+cover_image: ""
+
+# Author info
+author: "Kaustubh"

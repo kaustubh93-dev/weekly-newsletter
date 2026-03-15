@@ -1,0 +1,17 @@
+🔧 {{TOPIC_TITLE}} — Windows Server Weekly #{{EDITION_NUMBER}}
+
+{{HOOK_SENTENCE}}
+
+This week's edition covers:
+✅ {{KEY_POINT_1}}
+✅ {{KEY_POINT_2}}
+✅ {{KEY_POINT_3}}
+💡 Bonus: {{BONUS_HIGHLIGHT}}
+
+📖 Read the full article: {{HASHNODE_URL}}
+
+💌 This is part of my weekly newsletter where I share Windows Server tips, PowerShell scripts, and real-world case studies.
+
+If you work with Windows Server infrastructure, follow along for weekly insights!
+
+#WindowsServer #PowerShell #SysAdmin #ITInfrastructure #Microsoft #DevOps #Newsletter #TechTips #WindowsAdmin #CloudComputing
