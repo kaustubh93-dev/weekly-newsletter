@@ -95,69 +95,27 @@ def load_blog_content(edition_path: str) -> str:
         return f.read()
 
 
-def find_hashnode_tags(tag_names: list, token: str) -> list:
-    """Search for Hashnode tag IDs by name."""
+def build_tag_objects(tag_names: list) -> list:
+    """Build tag objects from tag names. Hashnode accepts {name, slug} pairs."""
     tags = []
     for tag_name in tag_names[:5]:  # Hashnode limits to 5 tags
-        query = """
-        query SearchTags($query: String!) {
-            searchTags(query: $query, first: 1) {
-                edges {
-                    node {
-                        id
-                        name
-                        slug
-                    }
-                }
-            }
-        }
-        """
-        payload = {
-            "query": query,
-            "variables": {"query": tag_name}
-        }
-
-        try:
-            req = urllib.request.Request(
-                HASHNODE_API_URL,
-                data=json.dumps(payload).encode("utf-8"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": token,
-                },
-                method="POST",
-            )
-            with urllib.request.urlopen(req) as resp:
-                result = json.loads(resp.read().decode())
-                edges = result.get("data", {}).get("searchTags", {}).get("edges", [])
-                if edges:
-                    tags.append({
-                        "id": edges[0]["node"]["id"],
-                        "name": edges[0]["node"]["name"],
-                        "slug": edges[0]["node"]["slug"],
-                    })
-        except Exception as e:
-            print(f"  ⚠️  Could not find tag '{tag_name}': {e}")
-
+        slug = tag_name.lower().strip().replace(" ", "-")
+        tags.append({"name": tag_name, "slug": slug})
     return tags
 
 
-def publish_draft(publication_id: str, token: str, title: str, content: str,
-                  subtitle: str = "", slug: str = "", tags: list = None,
-                  cover_image: str = "") -> dict:
-    """Publish a draft post to Hashnode."""
-
-    # Build tags input
-    tag_ids = [{"id": t["id"], "name": t["name"], "slug": t["slug"]} for t in (tags or [])]
+def create_draft(publication_id: str, token: str, title: str, content: str,
+                 subtitle: str = "", slug: str = "", tags: list = None,
+                 cover_image: str = "") -> dict:
+    """Create a DRAFT post on Hashnode (does NOT publish)."""
 
     query = """
-    mutation PublishPost($input: PublishPostInput!) {
-        publishPost(input: $input) {
-            post {
+    mutation CreateDraft($input: CreateDraftInput!) {
+        createDraft(input: $input) {
+            draft {
                 id
                 title
                 slug
-                url
             }
         }
     }
@@ -169,8 +127,7 @@ def publish_draft(publication_id: str, token: str, title: str, content: str,
             "title": title,
             "subtitle": subtitle or "",
             "contentMarkdown": content,
-            "tags": tag_ids,
-            "publishedAt": None,  # null = draft
+            "tags": tags or [],
         }
     }
 
@@ -201,15 +158,15 @@ def publish_draft(publication_id: str, token: str, title: str, content: str,
                     print(f"   {err.get('message', err)}")
                 sys.exit(1)
 
-            post = result.get("data", {}).get("publishPost", {}).get("post", {})
-            return post
+            draft = result.get("data", {}).get("createDraft", {}).get("draft", {})
+            return draft
 
     except urllib.error.HTTPError as e:
         body = e.read().decode()
         print(f"❌ HTTP {e.code}: {body}")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error publishing to Hashnode: {e}")
+        print(f"❌ Error creating draft on Hashnode: {e}")
         sys.exit(1)
 
 
@@ -268,14 +225,14 @@ def main():
         print(f"   Content preview: {content[:200]}...")
         return
 
-    # Find Hashnode tags
-    print(f"\n🏷️  Resolving tags...")
-    tags = find_hashnode_tags(tag_names, token)
-    print(f"   Found {len(tags)} tags: {', '.join(t['name'] for t in tags)}")
+    # Build tag objects
+    print(f"\n🏷️  Building tags...")
+    tags = build_tag_objects(tag_names)
+    print(f"   Tags: {', '.join(t['name'] for t in tags)}")
 
-    # Publish draft
-    print(f"\n📤 Publishing draft to Hashnode...")
-    post = publish_draft(
+    # Create draft (NOT publish)
+    print(f"\n📤 Creating draft on Hashnode...")
+    draft = create_draft(
         publication_id=publication_id,
         token=token,
         title=title,
@@ -286,12 +243,11 @@ def main():
         cover_image=cover_image,
     )
 
-    print(f"\n✅ Draft published successfully!")
-    print(f"   📝 Title: {post.get('title', 'N/A')}")
-    print(f"   🔗 URL: {post.get('url', 'N/A')}")
-    print(f"   🆔 Post ID: {post.get('id', 'N/A')}")
+    print(f"\n✅ Draft created successfully!")
+    print(f"   📝 Title: {draft.get('title', 'N/A')}")
+    print(f"   🆔 Draft ID: {draft.get('id', 'N/A')}")
     print(f"\n📋 Next steps:")
-    print(f"   1. Go to your Hashnode dashboard")
+    print(f"   1. Go to your Hashnode dashboard → Drafts")
     print(f"   2. Review the draft")
     print(f"   3. Hit 'Publish' when ready!")
 
