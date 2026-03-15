@@ -1,1 +1,145 @@
-<!-- Generate this using: prompts/email-format-prompt.md + content.md -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Windows Event Logs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0; padding: 0; width: 100% !important; height: 100% !important; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e9ecef;
+            color: #343a40;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .container { max-width: 680px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; }
+        .header { background-color: #003366; color: #ffffff; padding: 20px 30px; text-align: left; border-radius: 8px 8px 0 0; }
+        .header h1 { font-size: 24px; font-weight: 700; margin: 0; color: #ffffff; }
+        .header p { font-size: 16px; font-weight: 400; margin: 5px 0 0 0; color: #ffffff; opacity: 0.9; }
+        .content { background: #f8f9fa; padding: 30px; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 8px 8px; }
+        .content-section { margin-bottom: 25px; }
+        .content-section h2 { font-size: 20px; color: #003366; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e9ecef; font-weight: 700; }
+        .content-section h3 { font-size: 18px; color: #003366; margin: 20px 0 10px 0; font-weight: 600; }
+        .content-section p { font-size: 16px; line-height: 1.6; color: #343a40; margin: 10px 0; }
+        .content-section strong { color: #0056b3; }
+        .content-section ul, .content-section ol { padding-left: 20px; margin: 10px 0; }
+        .content-section li { margin-bottom: 10px; line-height: 1.6; }
+        .analogy { background: #e7f3ff; border-left: 4px solid #0056b3; padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0; }
+        .code-block { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 6px; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.5; overflow-x: auto; margin: 15px 0; white-space: pre-wrap; word-wrap: break-word; }
+        .tip-box { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0; }
+        .tip-box strong { color: #155724; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        .data-table th { background: #e9ecef; color: #495057; font-weight: 600; padding: 12px; border: 1px solid #dee2e6; text-align: left; }
+        .data-table td { padding: 12px; border: 1px solid #dee2e6; }
+        .data-table tr:nth-child(even) { background: #f8f9fa; }
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #6c757d; }
+        .footer p { margin: 5px 0; }
+        @media only screen and (max-width: 600px) {
+            .container { margin: 10px; }
+            .header { padding: 15px 20px; }
+            .content { padding: 20px; }
+            .header h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Mastering Windows Event Logs</h1>
+            <p>Weekly Windows Server Digest — Edition #1 | March 15, 2026</p>
+        </div>
+
+        <div class="content">
+            <div class="content-section">
+                <h2>This Week's Focus</h2>
+                <p>Windows Event Logs are one of the most powerful yet underutilized tools in a server administrator's toolkit. This week, we explore how to efficiently query, filter, and act on event log data using both the Event Viewer and PowerShell.</p>
+            </div>
+
+            <div class="content-section">
+                <h2>Understanding the Event Log Architecture</h2>
+                <p>Windows uses the <strong>Windows Event Log</strong> service (based on ETW — Event Tracing for Windows) to collect and store events from the operating system, applications, and services.</p>
+
+                <h3>The Three Core Logs</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Log</th>
+                        <th>Purpose</th>
+                        <th>Key Event IDs</th>
+                    </tr>
+                    <tr>
+                        <td><strong>System</strong></td>
+                        <td>OS-level events: drivers, services, hardware</td>
+                        <td>6005, 6006, 6008, 41, 1074</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Application</strong></td>
+                        <td>Software events: app crashes, updates</td>
+                        <td>1000, 1001, 1002</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security</strong></td>
+                        <td>Logon/logoff, permission changes, audit</td>
+                        <td>4624, 4625, 4648, 4720</td>
+                    </tr>
+                </table>
+
+                <div class="analogy">
+                    <strong>Think of it this way:</strong> Event logs are like a flight recorder (black box) for your server. When something goes wrong, the logs contain the evidence you need to understand what happened and when.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>PowerShell Script of the Week</h2>
+                <p>This script queries the System and Application logs for critical and error events from the last 24 hours, then exports them to a clean CSV report.</p>
+                <div class="code-block"># Query critical events from the last 24 hours
+$StartTime = (Get-Date).AddHours(-24)
+
+$Events = Get-WinEvent -FilterHashtable @{
+    LogName   = 'System', 'Application'
+    Level     = 1, 2  # Critical, Error
+    StartTime = $StartTime
+} -ErrorAction SilentlyContinue |
+Select-Object TimeCreated, LogName, Id, LevelDisplayName, Message
+
+# Export to CSV
+$ReportPath = "C:\Reports\EventReport_$(Get-Date -Format 'yyyyMMdd').csv"
+$Events | Export-Csv -Path $ReportPath -NoTypeInformation
+
+Write-Host "Found $($Events.Count) events. Report: $ReportPath"</div>
+                <div class="tip-box">
+                    <strong>Pro Tip:</strong> Schedule this script as a daily Task Scheduler job to automatically generate morning health reports for your server fleet.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Key Takeaways</h2>
+                <ul>
+                    <li><strong>Get-WinEvent</strong> is the modern replacement for Get-EventLog — use it for better performance and filtering</li>
+                    <li>Always use <strong>FilterHashtable</strong> instead of Where-Object for server-side filtering (10x faster)</li>
+                    <li>The <strong>Security log</strong> requires elevated privileges — run PowerShell as Administrator</li>
+                    <li>Set up <strong>Event Log forwarding</strong> to centralize logs from multiple servers</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Useful Resources</h2>
+                <ul>
+                    <li><a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent">Microsoft Learn: Get-WinEvent documentation</a></li>
+                    <li><a href="https://learn.microsoft.com/en-us/windows/win32/wes/windows-event-log">Windows Event Log reference</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Microsoft. All rights reserved.</p>
+            <p>This newsletter is for informational purposes only.</p>
+            <p>Questions? Reach out to your Microsoft support team.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,1 +1,19 @@
-# Generate this using: prompts/linkedin-format-prompt.md + content.md
+🔧 Mastering Windows Event Logs — Windows Server Weekly #1
+
+Ever stared at thousands of event log entries wondering where to start?
+
+You're not alone. Event logs are the most powerful (and most underused) troubleshooting tool on every Windows Server.
+
+This week's deep-dive covers:
+✅ The 3 core event logs every admin must know
+✅ Why Get-WinEvent beats Get-EventLog (10x faster filtering!)
+✅ Key Event IDs for crashes, reboots, and security events
+💡 Bonus: A ready-to-use PowerShell script that generates daily health reports from your event logs
+
+📖 Read the full article: https://kaustubhtech.hashnode.dev/mastering-windows-event-logs
+
+This is the first edition of my Windows Server Weekly newsletter — practical tips, scripts, and real-world lessons from enterprise infrastructure.
+
+What's your go-to Event ID when troubleshooting? Drop it in the comments 👇
+
+#WindowsServer #PowerShell #SysAdmin #ITInfrastructure #Microsoft #DevOps #TechTips #WindowsAdmin #ServerAdmin #EventLogs
