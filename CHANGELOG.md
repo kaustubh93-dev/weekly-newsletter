@@ -1,4 +1,4 @@
-# Changelog — ICICI Weekly Newsletter
+# Changelog — Weekly Newsletter
 
 All weekly editions are logged here in reverse chronological order.
 

@@ -126,4 +126,4 @@ Get-WinEvent -FilterHashtable @{
 
 *This article is part of the **Windows Server Weekly** series. Follow for weekly tips, scripts, and deep-dives into Windows Server administration.*
 
-*Originally shared as an internal newsletter for ICICI infrastructure team.*
+*Originally shared as a weekly internal newsletter for the infrastructure team.*

@@ -37,7 +37,7 @@ $response.data.me.publications.edges | ForEach-Object { $_.node } | Format-Table
 
 ## Step 3: Add Secrets to GitHub Repository
 
-1. Go to your repo on GitHub: `https://github.com/<username>/icici-weekly-newsletter`
+1. Go to your repo on GitHub: `https://github.com/<username>/weekly-newsletter`
 2. Click **Settings** → **Secrets and variables** → **Actions**
 3. Click **"New repository secret"** and add:
 

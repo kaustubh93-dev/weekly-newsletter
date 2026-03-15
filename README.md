@@ -1,13 +1,13 @@
-# icici-weekly-newsletter
+# weekly-newsletter
 
 ## 🎯 What is this?
 
-A weekly newsletter pipeline for ICICI client focused on **Windows Server administration** — tips, PowerShell scripts, learning resources, and incident reviews.
+A weekly newsletter pipeline focused on **Windows Server administration** — tips, PowerShell scripts, learning resources, and incident reviews.
 
 **One content source → Three outputs:**
 | Output | Destination | How |
 |--------|------------|-----|
-| 📧 HTML Email | Outlook → ICICI DL | Manual copy-paste |
+| 📧 HTML Email | Outlook | Manual copy-paste |
 | 📝 Blog Post | [kaustubhtech.hashnode.dev](https://kaustubhtech.hashnode.dev/) | Auto-draft via CI/CD, manual publish |
 | 💼 LinkedIn Post | LinkedIn | Manual post from generated text |
 
@@ -23,8 +23,8 @@ A weekly newsletter pipeline for ICICI client focused on **Windows Server admini
 ### Setup
 ```bash
 # Clone the repo
-git clone https://github.com/<your-username>/icici-weekly-newsletter.git
-cd icici-weekly-newsletter
+git clone https://github.com/<your-username>/weekly-newsletter.git
+cd weekly-newsletter
 
 # Install Python dependencies
 pip install -r scripts/requirements.txt
@@ -102,7 +102,7 @@ git push origin edition/2026-W12
 ## 📁 Project Structure
 
 ```
-icici-weekly-newsletter/
+weekly-newsletter/
 ├── .github/workflows/          # CI/CD pipelines
 │   ├── publish-newsletter.yml  # Post-merge: Hashnode draft + Release
 │   └── validate-pr.yml         # PR checks: validate outputs

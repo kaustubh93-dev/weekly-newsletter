@@ -1,4 +1,4 @@
-# Python dependencies for icici-weekly-newsletter scripts
+# Python dependencies for weekly-newsletter scripts
 # Install with: pip install -r scripts/requirements.txt
 
 # No external dependencies required!
