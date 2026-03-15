@@ -30,3 +30,11 @@ Desktop.ini
 # Temporary
 *.tmp
 *.log
+
+# ── Private content (kept local, not pushed to GitHub) ──
+# Archived legacy newsletters
+archive/
+
+# Raw research drafts and source images per edition
+editions/*/content.md
+editions/*/assets/
